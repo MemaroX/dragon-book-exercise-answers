@@ -1,47 +1,45 @@
-# 第4章要点
+# Chapter 4 Key Points
 
-### ！LR(0), SLR, LR, LALR 之间的区别
+### ! The difference between LR(0), SLR, LR, and LALR
 
-p157: LR(0) 自动机是如何做出移入-规约决定的？假设文法符号串 γ 使得 LR(0) 自动机从开始状态 0 运行到某个状态 j，那么如果下一个输入符号为 a 且状态 j 有一个在 a 上的转换，就移入 a，否则就进行规约。
+p157: How does an LR(0) automaton make shift-reduce decisions? Assume a grammar symbol string γ causes the LR(0) automaton to run from the start state 0 to some state j. Then, if the next input symbol is a and state j has a transition on a, shift a; otherwise, perform a reduction.
 
-这种方法会导致一些错误的规约，假定规约后的符号为 X，但 a 并不在 FOLLOW(X) 中，这种情况下就会有问题。所以 SLR 在这方面进行了改进。
+This method can lead to some incorrect reductions. Suppose the reduced symbol is X, but a is not in FOLLOW(X); this situation will cause problems. Therefore, SLR made improvements in this regard.
 
-p161：构造一个 SLR 分析表时，如果 [A -> α.] 在 I_i 中，那么对于 FOLLOW(A) 中的所有 a，将 ACTION[i, a] 设置为 “规约 A -> α”
+p161: When constructing an SLR parsing table, if [A -> α.] is in I_i, then for all a in FOLLOW(A), set ACTION[i, a] to "reduce A -> α".
 
-SLR 一定程度上解决了错误规约的问题，但没有完全解决。因为虽然 a 在 FOLLOW(A) 中才会选择规约，但是就当前所处的状态 I_i 而言，并不是每个 FOLLOW(A) 中的终结符都可以出现在状态 I_i 中的 A 后面。
+SLR solves the problem of incorrect reductions to a certain extent, but not completely. This is because although a reduction is chosen only when a is in FOLLOW(A), for the current state I_i, not every terminal in FOLLOW(A) can appear after A in state I_i.
 
-p166: 用更正式一点的语言来讲，必须要为 I_i 精确得指明哪些输入符号可以更在句柄 α 后面，从而使 α 可以被规约为 A。
+p166: To put it more formally, it is necessary to specify precisely for I_i which input symbols can follow the handle α, so that α can be reduced to A.
 
-LR 通过在项中加入第二个分量，即向前看符号来解决这个问题。但新的问题是 LR 会使得状态表及其庞大，而 LALR 就是一种比较经济的做法，它具有和 SLR 一样多的状态。
+LR solves this problem by adding a second component to the item, the lookahead symbol. But the new problem is that LR can make the state table extremely large, whereas LALR is a more economical approach that has as many states as SLR.
 
-p170：一般地说，通过将具有相同核心项集的 LR 项集合并，可以得到 LALR 项集。虽然 LALR 可能会进行一些错误的规约，但最终会在输入任何新的符号之前发现这个错误。
+p170: Generally speaking, by merging sets of LR items that have the same set of core items, one can obtain the LALR item sets. Although LALR may perform some incorrect reductions, it will ultimately discover this error before any new symbols are input.
 
-### 消除二义性 （p134）
+### Eliminating Ambiguity (p134)
 
-图 4-10，如何得出这个消除方法的？
+Figure 4-10, how is this elimination method derived?
 
-### 消除左递归 （p135）
+### Eliminating Left Recursion (p135)
 
-为什么图 4-11 的算法能消除文法中的左递归？
+Why can the algorithm in Figure 4-11 eliminate left recursion in a grammar?
 
-消除递归需满足两个条件：
+Eliminating recursion requires satisfying two conditions:
 
-1. 不存在立即左递归，即不存在形似这样的产生式 A -> Aα 。
-2. 不存在由多步推导可产生的左递归。
+1.  There is no immediate left recursion, i.e., no productions of the form A -> Aα.
+2.  There is no left recursion that can be produced by a multi-step derivation.
 
-算法 3~5 行循环的结果使得形如 A_i -> A_m α 的产生式一定满足 m >= i ，就消除了形如 S => Aa => Sda 这样的转换可能，也就是说由 A_m 一定推导不出以 A_i 开头的产生式，A_m α 就不存在产生 A-i 左递归的可能。
+The result of the loop in lines 3-5 of the algorithm ensures that productions of the form A_i -> A_m α must satisfy m >= i. This eliminates the possibility of transitions like S => Aa => Sda, which means that a production starting with A_i can definitely not be derived from A_m. Therefore, A_m α does not have the possibility of producing A_i left recursion.
 
-**同时需要注意的是：** 只需要处理 A_i -> A_j α 这样的产生式，而不需要处理形如 A_i -> α A_j β 这样的产生式
+**It should also be noted:** It is only necessary to handle productions like A_i -> A_j α, and not productions of the form A_i -> α A_j β.
 
-循环完成后，第 6 行消除了替换后的产生式中的立即左递归。
+After the loop is completed, line 6 eliminates the immediate left recursion in the substituted productions.
 
-### 使用 LR(0) 创建出 LALR(1) 项集的内核 （p173）
+### Using LR(0) to create the kernel of LALR(1) item sets (p173)
 
-自发生成的和传播的向前看符号
+Spontaneously generated and propagated lookahead symbols.
 
-### CNF 和 BNF
+### CNF and BNF
 
 - [Chomsky normal form](http://en.wikipedia.org/wiki/Chomsky_normal_form)
 - [Backus Naur Form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form)
-
-

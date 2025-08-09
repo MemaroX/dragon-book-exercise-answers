@@ -1,16 +1,33 @@
-# Compilers Principles, Techniques, &amp; Tools (purple dragon book) second edition exercise answers
-# 编译原理（紫龙书）中文第2版习题答案
+# Dragon Book Exercise Answers
 
-[![Join the chat at https://gitter.im/fool2fish/dragon-book-exercise-answers](https://badges.gitter.im/fool2fish/dragon-book-exercise-answers.svg)](https://gitter.im/fool2fish/dragon-book-exercise-answers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fool2fish/dragon-book-exercise-answers/blob/master/LICENSE)
 
-### Something I hope you know before go into the answers
+### Foreword
 
-- First, please **watch** or **star** this repo, I'll be more happy if you **follow** me.
-- Bug report, questions and discussion are welcome, you can post an [issue](https://github.com/fool2fish/dragon-book-practice-answer/issues/new) or [pull a request](https://help.github.com/articles/using-pull-requests).
-- All graphs are painted by [yed](http://www.yworks.com/en/products_yed_about.html), it is simple, cross-platform and free.
-- There are some key-point.md file, key points and difficult points are summarized in them.
-- As we know only teacher can buy the answer book, so I don't know the standard answer, but I tried my best to keep the correctness, if you found any bug, please [tell me](https://github.com/fool2fish/dragon-book-practice-answer/issues/new), thanks.
+This project contains my personal answers to the exercises in the book "Compilers: Principles, Techniques, and Tools" (2nd Edition), also known as the Dragon Book.
+
+The answers are written in markdown format. For questions that require coding, they are completed in Java.
+
+The project is still ongoing.
+
+### Table of Contents
+
+*   [Chapter 2: A Simple Syntax-Directed Translator](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch02)
+*   [Chapter 3: Lexical Analysis](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch03)
+*   [Chapter 4: Syntax Analysis](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch04)
+*   [Chapter 5: Syntax-Directed Translation](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch05)
+*   [Chapter 6: Intermediate-Code Generation](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch06)
+*   [Chapter 7: Run-Time Environments](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch07)
+*   [Chapter 8: Code Generation](https://github.com/fool2fish/dragon-book-exercise-answers/tree/master/ch08)
+
+### How to Use
+
+It is recommended to use a markdown viewer extension in your editor. For example, the `Markdown Preview Enhanced` plugin for VSCode.
+
+### Author
+
+Maher
 
 ### License
 
-It is still under consideration. Anyone know which is suitable?
+[MIT](https://github.com/fool2fish/dragon-book-exercise-answers/blob/master/LICENSE)

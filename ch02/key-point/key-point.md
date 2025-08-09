@@ -1,124 +1,121 @@
-# 第2章要点
+# Chapter 2 Key Points
 
-### 1. 文法、语法制导翻译方案、语法制导的翻译器
+### 1. Grammars, Syntax-Directed Translation Schemes, and Syntax-Directed Translators
 
-以一个仅支持个位数加减法的表达式为例
+Taking an expression that only supports single-digit addition and subtraction as an example:
 
-1. 文法
+1.  **Grammar**
 
-    list -> list + digit | list - digit | digit
-    
-    digit -> 0 | 1 | … | 9
+        list -> list + digit | list - digit | digit
+        digit -> 0 | 1 | … | 9
 
-2. （消除了左递归的）语法制导翻译方案
+2.  **Syntax-Directed Translation Scheme (with left recursion eliminated)**
 
-    expr -> term rest
-    
-    rest -> + term { print('+') } rest | - term { print('+') } rest | ε
-    
-    term -> 0 { print('0') } | 1 { print('1') } | … | 9 { print('9') }
-                                
-4. 语法制导的翻译器
-    
-    java代码见 p46
+        expr -> term rest
+        rest -> + term { print('+') } rest | - term { print('-') } rest | ε
+        term -> 0 { print('0') } | 1 { print('1') } | … | 9 { print('9') }
 
-### 2. 语法树、语法分析树
+4.  **Syntax-Directed Translator**
 
-以 2 + 5 - 9 为例
+    Java code can be found on p46.
 
-![语法树和语法分析树](https://raw.github.com/fool2fish/dragon-book-practice-answer/master/ch02/key-point/assets/dragonbook-keypoint-2.2-2.png)
+### 2. Abstract Syntax Trees, Parse Trees
 
-### 3. 正则文法、上下文无关文法、上下文相关文法?
+Using 2 + 5 - 9 as an example:
 
-文法缩写：
+![Abstract Syntax Tree and Parse Tree](https://raw.github.com/fool2fish/dragon-book-practice-answer/master/ch02/key-point/assets/dragonbook-keypoint-2.2-2.png)
 
-- RG：[正则文法](http://en.wikipedia.org/wiki/Regular_grammar)
-- CFG：[上下文无关文法](http://en.wikipedia.org/wiki/Context-free_grammar)
-- CSG：[上下文相关文法](http://en.wikipedia.org/wiki/Context-sensitive_grammar)
+### 3. Regular Grammars, Context-Free Grammars, Context-Sensitive Grammars?
 
-#### 正则文法
+Grammar Abbreviations:
+
+*   RG: [Regular grammar](http://en.wikipedia.org/wiki/Regular_grammar)
+*   CFG: [Context-free grammar](http://en.wikipedia.org/wiki/Context-free_grammar)
+*   CSG: [Context-sensitive grammar](http://en.wikipedia.org/wiki/Context-sensitive_grammar)
+
+#### Regular Grammar
 
 [wiki](http://en.wikipedia.org/wiki/Regular_grammar)
 
-正则文法在标准之后所有产生式都应该满足下面三种情形中的一种：
+In a standard regular grammar, all production rules must satisfy one of the following three forms:
 
     B -> a
     B -> a C
     B -> epsilon
 
-关键点在于：
+The key points are:
 
-1. 产生式的左手边必须是一个非终结符。
-2. 产生式的右手边可以什么都没有，可以有一个终结符，也可以有一个终结符加一个非终结符。
+1.  The left-hand side of a production must be a single non-terminal symbol.
+2.  The right-hand side of a production can be empty (epsilon), a single terminal symbol, or a single terminal symbol followed by a single non-terminal symbol.
 
-从产生式的角度看，这样的规定使得每应用一条产生规则，就可以产生出零或一个终结符，直到最后产生出我们要的那个字符串。
+From a production perspective, this structure ensures that each application of a rule generates zero or one terminal symbol, continuing until the target string is formed.
 
-从匹配的角度看，这样的规定使得每应用一条规则，就可以消耗掉一个非终结符，直到整个字符串被匹配掉。
+From a matching perspective, this structure ensures that each application of a rule consumes one non-terminal symbol, continuing until the entire string is matched.
 
-这样定义的语言所对应的自动机有一种性质：有限状态自动机。
+The automaton corresponding to a language defined this way has a specific property: it is a finite state automaton.
 
-简单来说就是只需要记录当前的一个状态，和得到下一个输入符号，就可以决定接下来的状态迁移。
+Simply put, one only needs to record the current state and receive the next input symbol to determine the next state transition.
 
-#### 正则文法和上下文无关文法
+#### Regular Grammars and Context-Free Grammars
 
-CFG 跟 RG 最大的区别就是，产生式的右手边可以有零或多个终结符或非终结符，顺序和个数都没限制。
+The biggest difference between a CFG and an RG is that the right-hand side of a CFG's production rules can contain zero or more terminal and non-terminal symbols, with no restrictions on order or quantity.
 
-想像一个经典例子，括号的配对匹配：
+Imagine a classic example: matching nested parentheses.
 
-expr -> '(' expr ')' | epsilon
+    expr -> '(' expr ')' | epsilon
 
-这个产生式里（先只看第一个子产生式），右手边有一个非终结符 expr，但它的左右两侧都有终结符，这种产生式无法被标准化为严格的 RG 。这就是CFG的一个例子。
+In this production (considering only the first alternative), the right-hand side has a non-terminal `expr` surrounded by terminal symbols. This type of production cannot be standardized into a strict RG. This is an example of a CFG.
 
-它对应的自动机就不只要记录当前的一个状态，还得外加记录到达当前位置的历史，才可以根据下一个输入符号决定状态迁移。所谓的“历史”在这里就是存着已匹配规则的栈。
+The corresponding automaton for this not only needs to record the current state but also the history of how it arrived at the current position to decide the state transition based on the next input symbol. This "history" is essentially a stack storing the matched rules.
 
-CFG 对应的自动机为 PDA(下推自动机)。
+The automaton corresponding to a CFG is a PDA (Pushdown Automaton).
 
-RG 的规定严格，对应的好处是它对应的自动机非常简单，所以可以用非常高效且简单的方式来实现。
+The strict rules of an RG have a corresponding benefit: its automaton is very simple, allowing for a highly efficient and straightforward implementation.
 
-#### 上下文相关文法
+#### Context-Sensitive Grammars
 
-CSG 在 CFG的基础上进一步放宽限制。
+A CSG further relaxes the restrictions of a CFG.
 
-产生式的左手边也可以有终结符和非终结符。左手边的终结符就是“上下文”的来源。也就是说匹配的时候不能光看当前匹配到哪里了，还得看当前位置的左右到底有啥（也就是上下文是啥），上下文在这条规则应用的时候并不会被消耗掉，只是“看看”。
+The left-hand side of the production can also contain terminal and non-terminal symbols. The terminal symbols on the left-hand side are the source of the "context". This means that during matching, one must not only look at the current match position but also at what surrounds it (the context). The context is not consumed when the rule is applied; it is merely "observed".
 
-CSG 的再上一层是 PSG，phrase structure grammar。
+The next level above CSG is PSG, phrase-structure grammar.
 
-基本上就是CSG的限制全部取消掉。
+This basically removes all the restrictions of a CSG.
 
-左右两边都可以有任意多个、任意顺序的终结符和非终结符。
+Both the left and right sides can have any number of terminal and non-terminal symbols in any order.
 
-反正不做自然语言处理的话也不会遇到这种文法，所以具体就不说了。
+Since one is unlikely to encounter such grammars outside of natural language processing, we will not go into further detail.
 
-### 4. 为什么有 n 个运算符的优先级，就对应 n+1 个产生式？
+### 4. Why do n levels of operator precedence correspond to n+1 production rules?
 
-优先级的处理可以在纯文法层面解决，也可以在parser实现中用别的办法处理掉。
+The handling of precedence can be resolved at the pure grammar level, or it can be handled by other means within the parser's implementation.
 
-纯文法层面书上介绍的，有多少个优先级就有那么多加1个产生式。
+At the pure grammar level, as introduced in the book, for n levels of precedence, you need n+1 production rules.
 
-书上介绍的四则运算的文法，会使得加减法离根比较近，乘除法离根比较远。
+The grammar for the four basic arithmetic operations introduced in the book causes addition and subtraction to be closer to the root, while multiplication and division are farther away.
 
-语法树的形状决定了节点的计算顺序，离根远的节点就会先处理，这样看起来就是乘除法先计算，也就是乘除法的优先级更高。
+The shape of the syntax tree determines the calculation order of the nodes. Nodes farther from the root are processed first. In this way, it appears that multiplication and division are calculated first, meaning they have higher precedence.
 
-参考：http://rednaxelafx.iteye.com/blog/492667
+Reference: http://rednaxelafx.iteye.com/blog/492667
 
-### 5. 避免二义性文法的有效原则？
+### 5. What are effective principles for avoiding ambiguous grammars?
 
-二义性问题主要是跟 CFG 的特性有关系的。
+The problem of ambiguity is mainly related to the characteristics of CFGs.
 
-CFG 的选择结构（"|"）是没有规定顺序或者说优先级的，
-同时，多个规则可能会有共同前缀，
-这样才会有二义性问题。
+The selection structure ("|") of a CFG does not specify an order or priority.
+At the same time, multiple rules may share a common prefix.
+This is what leads to ambiguity issues.
 
-PEG 是跟CFG类似的一种东西，语言的表达力上跟CFG相似。
-但文法层面没有二义性，因为它的选择结构（"|"）是有顺序或者说有优先级的。
+A PEG is something similar to a CFG, with comparable expressive power for languages.
+However, there is no ambiguity at the grammar level because its selection structure ("|") has a defined order or priority.
 
-### 6. 避免预测分析器因左递归文法造成的无限循环
+### 6. How to avoid the infinite loop caused by left-recursive grammars in a predictive parser?
 
-产生式：
+Production rule:
 
-A -> A x | y
+    A -> A x | y
 
-语法制导翻译伪代码片段：
+A snippet of pseudocode for a syntax-directed translation:
 
     void A(){
         switch(lookahead){
@@ -131,16 +128,15 @@ A -> A x | y
         }
     }
 
-当语句符合 A x 形式时， A() 运算会陷入死循环，可以通过将产生式改为等价的非左递归形式来避免: 
+When a statement matches the `A x` form, the `A()` function will enter an infinite loop. This can be avoided by converting the production rule into an equivalent non-left-recursive form:
 
-B -> y C
+    B -> y C
+    C -> x C | ε
 
-C -> x C | ε
+### 7. Why is it more difficult to translate expressions with left-associative operators in a right-recursive grammar?
 
-### 7. 为什么在右递归的文法中，包含了左结合运算符的表达式翻译会比较困难？
+### 8. The issue of l-values and r-values during intermediate code generation.
 
-### 8. 中间代码生成时的左值和右值问题。
+Looking at the pseudocode for `lvalue()` and `rvalue()` in the book, it feels like anything that can be either an l-value or an r-value is handled by `lvalue()`. As for handling r-values, either they are handled directly, or for r-values that can also be l-values, `lvalue()` is called.
 
-看了书上 lvalue() 和 rvalue() 的伪代码，感觉可以做左值也可以做右值的都由 lvalue() 处理，而对于右值的处理，要么自己处理掉了，对于可以作为左值的右值则调用 lvalue()。
-
-为什么不直接弄个 value() 就结了？
+Why not just have a single `value()` function to settle it?
